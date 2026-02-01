@@ -130,6 +130,12 @@ variable "use_single_nat_gateway" {
   default     = false
 }
 
+variable "langfuse_helm_chart_repository" {
+  description = "URL of the Helm chart repository for Langfuse"
+  type        = string
+  default     = "https://doctor-wise.github.io/langfuse-k8s"
+}
+
 variable "langfuse_helm_chart_version" {
   description = "Version of the Langfuse Helm chart to deploy"
   type        = string
