@@ -186,8 +186,8 @@ variable "clickhouse_replicas" {
   type        = number
   default     = 3
   validation {
-    condition     = var.clickhouse_replicas > 1
-    error_message = "There must be at least two clickhouse replicas for high availability."
+    condition     = var.clickhouse_replicas >= 1
+    error_message = "There must be at least one clickhouse replica."
   }
 }
 
@@ -201,6 +201,16 @@ variable "clickhouse_memory" {
   description = "Memory allocation for ClickHouse containers"
   type        = string
   default     = "8Gi"
+}
+
+variable "clickhouse_keeper_replicas" {
+  description = "Number of replicas for ClickHouse Keeper (Zookeeper) containers. Should be odd number for quorum (1, 3, 5)."
+  type        = number
+  default     = 3
+  validation {
+    condition     = var.clickhouse_keeper_replicas >= 1
+    error_message = "There must be at least one ClickHouse Keeper replica."
+  }
 }
 
 variable "clickhouse_keeper_cpu" {
