@@ -54,6 +54,12 @@ variable "private_route_table_ids" {
   default     = null
 }
 
+variable "vpc_flow_log_retention_days" {
+  description = "Number of days to retain VPC flow logs in CloudWatch. Set to 0 for infinite retention."
+  type        = number
+  default     = 90
+}
+
 variable "kubernetes_version" {
   description = "Kubernetes version to use for the EKS cluster"
   type        = string
