@@ -58,7 +58,7 @@ resource "aws_elasticache_replication_group" "redis" {
   node_type                  = var.cache_node_type
   port                       = 6379
   parameter_group_name       = aws_elasticache_parameter_group.redis.name
-  automatic_failover_enabled = var.cache_instance_count > 1 ? true : false
+  automatic_failover_enabled = var.cache_instance_count > 1
   num_cache_clusters         = var.cache_instance_count
   subnet_group_name          = aws_elasticache_subnet_group.redis.name
   security_group_ids         = [aws_security_group.redis.id]
@@ -67,7 +67,7 @@ resource "aws_elasticache_replication_group" "redis" {
   auth_token                 = random_password.redis_password.result
   transit_encryption_enabled = true
   at_rest_encryption_enabled = var.redis_at_rest_encryption
-  multi_az_enabled           = var.redis_multi_az
+  multi_az_enabled           = var.cache_instance_count > 1 ? var.redis_multi_az : false
 
   log_delivery_configuration {
     destination      = aws_cloudwatch_log_group.redis.name
@@ -78,5 +78,11 @@ resource "aws_elasticache_replication_group" "redis" {
 
   tags = {
     Name = local.tag_name
+  }
+
+  lifecycle {
+    # AWS requires disabling failover before reducing replicas
+    # This ensures Terraform handles the ordering correctly
+    create_before_destroy = false
   }
 }
